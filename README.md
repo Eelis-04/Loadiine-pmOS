@@ -17,8 +17,7 @@ X Touch gestures / swipe navigation | Currently only tapping buttons to nacigate
 X Packaging for postmarketOS (apk / pmbootstrap)
 
 ## Screenshots
-
-I'll add screenshots later
+<img src="screenshots/screenshot_version1.png" width="300"/>
 
 ## Features planned / in discussion
 
@@ -29,7 +28,7 @@ I'll add screenshots later
 
 
 ## Credits (Original Authors)
-https://github.com/dimok789/loadiine_gx2
+![Loadiine GX2 WiiU](https://github.com/dimok789/loadiine_gx2)
 (dimok, Cyan, Maschell, n1ghty, dibas)
 
 This project is not affiliated with the original authors. 
