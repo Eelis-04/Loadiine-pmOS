@@ -13,8 +13,8 @@ Early prototype stage – UI focused
 ✅ Settings screen (work in progress)  
 ✅ View switching (top center button)  
 X Real app scanning & launching (.desktop files) – planned next  
-X Touch gestures / swipe navigation | Currently only tapping buttons to nacigate 
-X Packaging for postmarketOS (apk / pmbootstrap)
+X Touch gestures / swipe navigation | Currently only tapping buttons to navigate 
+X Packaging for postmarketOS (apk)
 
 ## Screenshots
 <img src="screenshots/screenshot_version1.png" width="300"/>
