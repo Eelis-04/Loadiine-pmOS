@@ -19,6 +19,8 @@ X Packaging for postmarketOS (apk)
 ## Screenshots
 <img src="screenshots/screenshot_version1.png" width="300"/>
 
+The app grid will be adjusted to display more apps per page, planned is a default of 3x5 (15 apps per page). But possibly will be adjusted for different screen sizes.
+
 ## Features planned / in discussion
 
 - Scan `/usr/share/applications` + `~/.local/share/applications`
