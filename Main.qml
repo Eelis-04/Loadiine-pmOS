@@ -12,10 +12,9 @@ Window {
     title: "Loadiine"
     color: "black"
 
-    // ==================== AUDIO ====================
     MediaPlayer {
         id: bgMusic
-        source: "file:///data/sounds/bgMusic.ogg"
+        source: "file:///pmos_loadiine/data/sounds/bgMusic.ogg"
         audioOutput: AudioOutput { volume: 0.5 }
         Component.onCompleted: bgMusic.play()
         onMediaStatusChanged: {
@@ -26,19 +25,19 @@ Window {
 
     MediaPlayer {
         id: sfxClick
-        source: "file:///data/sounds/button_click.mp3"
+        source: "file:///pmos_loadiine/data/sounds/button_click.mp3"
         audioOutput: AudioOutput { volume: 1.0 }
     }
 
     MediaPlayer {
         id: sfxScreenSwitch
-        source: "file:///data/sounds/screenSwitchSound.mp3"
+        source: "file:///pmos_loadiine/data/sounds/screenSwitchSound.mp3"
         audioOutput: AudioOutput { volume: 1.0 }
     }
 
     MediaPlayer {
         id: sfxSettings
-        source: "file:///data/sounds/settings_click_2.mp3"
+        source: "file:///pmos_loadiine/data/sounds/settings_click_2.mp3"
         audioOutput: AudioOutput { volume: 1.0 }
     }
 
@@ -55,86 +54,71 @@ Window {
         sfxSettings.play()
     }
 
-    // ==================== BUBBLES ====================
-    ParticleSystem {
-        id: bubbleSystem
+    Item {
         anchors.fill: parent
-        running: true
-        z: 0
-    }
+        clip: true
 
-    Emitter {
-        system: bubbleSystem
-        anchors.bottom: parent.bottom
-        width: parent.width
-        height: 20
-        emitRate: 5
-        lifeSpan: 4500
-        lifeSpanVariation: 1500
-        velocity: AngleDirection {
-            angle: 270; angleVariation: 30
-            magnitude: 70; magnitudeVariation: 20
-        }
-        size: 3
-        sizeVariation: 2
-        maximumEmitted: 40
-    }
+        Repeater {
+            model: 30
 
-    Emitter {
-        system: bubbleSystem
-        anchors.bottom: parent.bottom
-        width: parent.width
-        height: 20
-        emitRate: 9
-        lifeSpan: 5000
-        lifeSpanVariation: 1500
-        velocity: AngleDirection {
-            angle: 270; angleVariation: 25
-            magnitude: 85; magnitudeVariation: 25
-        }
-        size: 8
-        sizeVariation: 3
-        maximumEmitted: 30
-    }
+            delegate: Item {
+                id: bub
 
-    Emitter {
-        system: bubbleSystem
-        anchors.bottom: parent.bottom
-        width: parent.width
-        height: 20
-        emitRate: 2
-        lifeSpan: 5500
-        lifeSpanVariation: 1000
-        velocity: AngleDirection {
-            angle: 270; angleVariation: 20
-            magnitude: 100; magnitudeVariation: 30
-        }
-        size: 16
-        sizeVariation: 5
-        maximumEmitted: 15
-    }
+                readonly property real  dia      : 2  + Math.random() * 25
+                readonly property real  baseAlpha: 0.18 + Math.random() * 0.52
+                readonly property int   riseDur  : 7000  + Math.random() * 14000
+                readonly property real  driftAmp : 20 + Math.random() * 60
+                readonly property int   driftDur : 1800  + Math.random() * 3200
+                readonly property real  phase    : Math.random() * Math.PI * 2
+                readonly property real  centreX  : Math.random() * root.width
 
-    Timer {
-        interval: 50; running: true; repeat: false
-        onTriggered: bubbleSystem.burst(20)
-    }
+                width:  dia
+                height: dia
 
-    Wander {
-        system: bubbleSystem
-        xVariance: 60; yVariance: 0
-        pace: 180
-        affectedParameter: Wander.Position
-    }
+                property real driftT: 0
+                x: centreX - dia / 2 + Math.sin(phase + driftT * Math.PI * 2) * driftAmp
 
-    ItemParticle {
-        system: bubbleSystem
-        delegate: Rectangle {
-            width: 8; height: 8; radius: width / 2
-            color: "white"; opacity: 0.65
+                NumberAnimation on driftT {
+                    from: 0; to: 1
+                    duration: bub.driftDur
+                    loops: Animation.Infinite
+                    running: true
+                }
+
+                SequentialAnimation {
+                    id: riseAnim
+                    running: true
+                    loops: Animation.Infinite
+
+                    PauseAnimation {
+                        duration: Math.random() * bub.riseDur
+                    }
+                    NumberAnimation {
+                        target:   bub
+                        property: "y"
+                        from:     root.height + bub.dia
+                        to:      -bub.dia
+                        duration: bub.riseDur
+                        easing.type: Easing.Linear
+                    }
+                }
+
+                Component.onCompleted: {
+                    var totalDist = root.height + 2 * dia
+                    var slot      = totalDist / 500
+                    y = root.height + dia - (slot * index + Math.random() * slot)
+                }
+
+                Rectangle {
+                    width:  parent.dia
+                    height: parent.dia
+                    radius: parent.dia / 2
+                    color:  Qt.rgba(1, 1, 1, parent.baseAlpha)
+                }
+            }
         }
     }
 
-    // ==================== STACK ====================
     StackView {
         id: stack
         anchors.fill: parent
@@ -142,7 +126,6 @@ Window {
         initialItem: mainScreen
     }
 
-    // ==================== MAIN SCREEN ====================
     Component {
         id: mainScreen
         Item {
@@ -157,7 +140,6 @@ Window {
             property int currentPage: 0
             property int totalPages: Math.ceil(appModel.count / appsPerPage)
 
-            // ---- grid ----
             Item {
                 id: gridArea
                 width: mainItem.gridTotalW
@@ -254,7 +236,6 @@ Window {
                 }
             }
 
-            // ---- Page dots ----
             Row {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: parent.bottom
@@ -269,7 +250,6 @@ Window {
                 }
             }
 
-            // ---- Left arrow ----
             Image {
                 source: "file:///data/images/leftArrow.png"
                 width: 25; height: 70
@@ -286,7 +266,6 @@ Window {
                 }
             }
 
-            // ---- right arrow ----
             Image {
                 source: "file:///data/images/rightArrow.png"
                 width: 25; height: 70
@@ -303,7 +282,6 @@ Window {
                 }
             }
 
-            // ---- Settings button ----
             Image {
                 source: "file:///data/images/settingsButton.png"
                 width: 72; height: 72
@@ -319,7 +297,6 @@ Window {
                 }
             }
 
-            // ---- Layout switch button----
             Image {
                 source: "file:///data/images/layoutSwitchButton.png"
                 width: 80; height: 80
@@ -337,7 +314,6 @@ Window {
         }
     }
 
-    // ==================== SETTINGS SCREEN ====================
     Component {
         id: settingsScreen
         Item {
@@ -372,7 +348,7 @@ Window {
                 }
             }
 
-            // ---- Settings list (Will be replacved as a page view later)----
+            // Settings list will be replaced as a page view later
             ListView {
                 anchors.top: topBanner.bottom
                 anchors.left: parent.left
@@ -395,9 +371,8 @@ Window {
                         anchors.fill: parent
                         onClicked: {
                             root.playClick()
-                            // Toggle music off if "Sounds" tapped, prototype only, will make a settings page with sound settings
                             if (modelData === "Sounds") {
-                                bgMusic.playing ? bgMusic.pause() : bgMusic.play()
+                                bgMusic.playbackState === MediaPlayer.PlayingState ? bgMusic.pause() : bgMusic.play()
                             }
                             console.log("Opened:", modelData)
                         }
@@ -423,7 +398,7 @@ Window {
         }
     }
 
-    // ==================== APPS (will be replaced) ====================
+    // apps will be replaced with actual app loader
     ListModel {
         id: appModel
         ListElement { title: "App 1" }
@@ -433,6 +408,11 @@ Window {
         ListElement { title: "App 5" }
         ListElement { title: "App 6" }
         ListElement { title: "App 7" }
+        ListElement { title: "App 8" }
+        ListElement { title: "App 8" }
+        ListElement { title: "App 8" }
+        ListElement { title: "App 8" }
+        ListElement { title: "App 8" }
         ListElement { title: "App 8" }
     }
 }
