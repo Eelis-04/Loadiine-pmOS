@@ -17,7 +17,7 @@ X Touch gestures / swipe navigation | Currently only tapping buttons to navigate
 X Packaging for postmarketOS (apk)
 
 ## Screenshots
-<img src="screenshots/screenshot_version1.png" width="300"/>
+<img src="Screenshot_20260327_125559.png" width="300"/>
 
 The app grid will be adjusted to display more apps per page, planned is a default of 3x5 (15 apps per page). But possibly will be adjusted for different screen sizes.
 
